@@ -45,7 +45,7 @@ router.post('/register', async (req, res) => {
 // "Login" by name only (for demo purposes)
 router.post('/login', async (req, res) => {
   const { name, password } = req.body;
-console.log(name, password)
+//console.log(name, password)
   try {
     const user = await User.findOne({ name });
     console.log("userfound", user)

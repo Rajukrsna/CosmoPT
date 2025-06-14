@@ -6,7 +6,7 @@ const verifyToken = require('../middleware/authMiddleware');
 router.get('/:id', async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-    console.log("got user", user)
+    //console.log("got user", user)
     res.json(user);
   } catch (err) {
     res.status(500).json({ error: 'User not found' });
@@ -112,6 +112,7 @@ router.put('/:id/unlock', async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
 
 
 module.exports = router;

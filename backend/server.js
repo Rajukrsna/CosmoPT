@@ -4,7 +4,7 @@ const cors = require('cors');
 const dotenv = require('dotenv');
 const userRoutes = require('./routes/UserRoutes');
 const authRoutes = require('./routes/authRoutes');
-
+const fetchData = require('./routes/fetchDataRoutes');
 
 dotenv.config();
 
@@ -26,5 +26,5 @@ mongoose.connect(process.env.MONGO_URI, {
 
 app.use('/api/users', userRoutes);
 app.use('/api/auth', authRoutes);
-
+app.use('/api/users/fetch', fetchData);
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

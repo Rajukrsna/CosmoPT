@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 import { BookOpen, Trophy, Star, CheckCircle, XCircle, RotateCcw } from 'lucide-react';
 import { useGame } from '../context/GameContext';
+import { useNavigate } from 'react-router-dom';
 
 interface Quiz {
   id: string;
@@ -18,135 +19,15 @@ interface Question {
   correctAnswer: number;
   explanation: string;
 }
-
-const quizzes: Quiz[] = [
-  {
-    id: 'solar-system-basics',
-    title: 'Solar System Basics',
-    category: 'Planets',
-    difficulty: 'Beginner',
-    points: 100,
-    questions: [
-      {
-        id: 'q1',
-        question: 'Which planet is closest to the Sun?',
-        options: ['Venus', 'Mercury', 'Earth', 'Mars'],
-        correctAnswer: 1,
-        explanation: 'Mercury is the closest planet to the Sun, orbiting at an average distance of about 58 million kilometers.'
-      },
-      {
-        id: 'q2',
-        question: 'How many planets are in our solar system?',
-        options: ['7', '8', '9', '10'],
-        correctAnswer: 1,
-        explanation: 'There are 8 planets in our solar system since Pluto was reclassified as a dwarf planet in 2006.'
-      },
-      {
-        id: 'q3',
-        question: 'Which planet is known as the "Red Planet"?',
-        options: ['Venus', 'Jupiter', 'Mars', 'Saturn'],
-        correctAnswer: 2,
-        explanation: 'Mars is called the Red Planet due to iron oxide (rust) on its surface, giving it a reddish appearance.'
-      },
-      {
-        id: 'q4',
-        question: 'Which planet has the most moons?',
-        options: ['Jupiter', 'Saturn', 'Uranus', 'Neptune'],
-        correctAnswer: 1,
-        explanation: 'Saturn has the most confirmed moons with 146 known moons, surpassing Jupiter\'s 95 moons.'
-      },
-      {
-        id: 'q5',
-        question: 'What is the largest planet in our solar system?',
-        options: ['Saturn', 'Neptune', 'Jupiter', 'Uranus'],
-        correctAnswer: 2,
-        explanation: 'Jupiter is the largest planet, with a mass greater than all other planets combined.'
-      }
-    ]
-  },
-  {
-    id: 'space-exploration',
-    title: 'Space Exploration History',
-    category: 'History',
-    difficulty: 'Intermediate',
-    points: 150,
-    questions: [
-      {
-        id: 'q1',
-        question: 'Who was the first human to travel to space?',
-        options: ['Neil Armstrong', 'Yuri Gagarin', 'Buzz Aldrin', 'John Glenn'],
-        correctAnswer: 1,
-        explanation: 'Yuri Gagarin became the first human to journey into outer space on April 12, 1961, aboard Vostok 1.'
-      },
-      {
-        id: 'q2',
-        question: 'Which spacecraft was the first to land on the Moon?',
-        options: ['Apollo 10', 'Apollo 11', 'Apollo 12', 'Luna 2'],
-        correctAnswer: 1,
-        explanation: 'Apollo 11 was the first crewed mission to land on the Moon on July 20, 1969.'
-      },
-      {
-        id: 'q3',
-        question: 'What was the first artificial satellite launched into space?',
-        options: ['Explorer 1', 'Sputnik 1', 'Vanguard 1', 'Luna 1'],
-        correctAnswer: 1,
-        explanation: 'Sputnik 1, launched by the Soviet Union on October 4, 1957, was the first artificial Earth satellite.'
-      },
-      {
-        id: 'q4',
-        question: 'Which space agency launched the Hubble Space Telescope?',
-        options: ['ESA', 'NASA', 'Roscosmos', 'JAXA'],
-        correctAnswer: 1,
-        explanation: 'NASA launched the Hubble Space Telescope in 1990, revolutionizing our understanding of the universe.'
-      }
-    ]
-  },
-  {
-    id: 'black-holes',
-    title: 'Black Holes and Cosmic Phenomena',
-    category: 'Astrophysics',
-    difficulty: 'Advanced',
-    points: 200,
-    questions: [
-      {
-        id: 'q1',
-        question: 'What is the event horizon of a black hole?',
-        options: [
-          'The center of the black hole',
-          'The point of no return around a black hole',
-          'The brightest part of a black hole',
-          'The outer edge of the galaxy'
-        ],
-        correctAnswer: 1,
-        explanation: 'The event horizon is the boundary around a black hole beyond which nothing can escape, not even light.'
-      },
-      {
-        id: 'q2',
-        question: 'What happens to time near a black hole?',
-        options: [
-          'Time speeds up',
-          'Time slows down',
-          'Time stops completely',
-          'Time reverses'
-        ],
-        correctAnswer: 1,
-        explanation: 'Due to gravitational time dilation, time appears to slow down near massive objects like black holes.'
-      },
-      {
-        id: 'q3',
-        question: 'What is Hawking radiation?',
-        options: [
-          'Radiation from the Big Bang',
-          'Light from black holes',
-          'Theoretical radiation emitted by black holes',
-          'Solar radiation'
-        ],
-        correctAnswer: 2,
-        explanation: 'Hawking radiation is theoretical radiation predicted to be emitted by black holes due to quantum effects.'
-      }
-    ]
-  }
-];
+ interface Labs {
+  _id?: string;
+  title: string;
+  description: string;
+  image: string;       
+  route: string;       
+  track: string;       
+  createdAt?: Date;   
+ }
 
 export const Learning: React.FC = () => {
   const [selectedQuiz, setSelectedQuiz] = useState<Quiz | null>(null);
@@ -156,8 +37,22 @@ export const Learning: React.FC = () => {
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [score, setScore] = useState(0);
   const [answers, setAnswers] = useState<(number | null)[]>([]);
-  
-  const { addPoints, completeQuiz, user } = useGame();
+  const { addPoints, completeQuiz, user, fetchQuiz, fetchLabs } = useGame();
+  const [quizzes, setQuizzes] = useState<Quiz[]>([]);
+  const [labs , setLabs] = useState<Labs[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(()=>{
+    if(fetchLabs)
+    {
+      setLabs(fetchLabs)
+    }
+  },[fetchLabs]);
+  useEffect(() => {
+    if (fetchQuiz) {
+      setQuizzes(fetchQuiz);
+    }
+  }, [fetchQuiz]); 
 
   const startQuiz = (quiz: Quiz) => {
     setSelectedQuiz(quiz);
@@ -196,7 +91,6 @@ export const Learning: React.FC = () => {
         if(finalScore){
         const percentage = Math.round((finalScore / selectedQuiz!.questions.length) * 100);
         const earnedPoints = Math.round((percentage / 100) * selectedQuiz!.points);
-        
         setScore(finalScore);
         setQuizCompleted(true);
         addPoints(earnedPoints);
@@ -205,7 +99,6 @@ export const Learning: React.FC = () => {
       }
     }, 2000);
   };
-
   const resetQuiz = () => {
     setSelectedQuiz(null);
     setCurrentQuestion(0);
@@ -225,40 +118,72 @@ export const Learning: React.FC = () => {
       default: return 'text-gray-400 bg-gray-400/20 border-gray-400/30';
     }
   };
-
+ const [activeTab, setActiveTab] = useState<'quiz' | 'labs'>('quiz');
   if (!selectedQuiz) {
-    return (
-      <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <h1 className="text-4xl sm:text-5xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
-                Gamified Learning Hub
-              </span>
-            </h1>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
-              Test your space knowledge with interactive quizzes and earn points to unlock achievements!
-            </p>
-            
-            {/* User Progress */}
-            <div className="flex justify-center space-x-8 mb-8">
+  return (
+    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl sm:text-5xl font-bold mb-4">
+            <span className="bg-gradient-to-r from-green-400 to-blue-400 bg-clip-text text-transparent">
+              Gamified Learning Hub
+            </span>
+          </h1>
+          <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
+            Test your space knowledge with interactive quizzes and hands-on labs to unlock achievements!
+          </p>
+
+          {/* User Progress */}
+          <div className="flex justify-center space-x-8 mb-8">
+            <div className="text-center">
+              <div className="text-2xl font-bold text-purple-400">{user?.level}</div>
+              <div className="text-sm text-gray-400">Level</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-yellow-400">{user?.points}</div>
+              <div className="text-sm text-gray-400">Total Points</div>
+            </div>
+            <div className="text-center">
+              <div className="text-2xl font-bold text-green-400">{user?.completedQuizzes.length}</div>
+              <div className="text-sm text-gray-400">Quizzes Completed</div>
+            </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-purple-400">{user?.level}</div>
-                <div className="text-sm text-gray-400">Level</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-yellow-400">{user?.points}</div>
-                <div className="text-sm text-gray-400">Total Points</div>
-              </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold text-green-400">{user?.completedQuizzes.length}</div>
-                <div className="text-sm text-gray-400">Quizzes Completed</div>
-              </div>
+              <div className="text-2xl font-bold text-green-400">{user?.completedQuizzes.length}</div>
+              <div className="text-sm text-gray-400">Labs Completed</div>
             </div>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {quizzes.map((quiz) => {
+          {/* Tab Toggle */}
+          <div className="flex justify-center space-x-4 mb-10">
+            <button
+              onClick={() => setActiveTab('quiz')}
+              className={`px-6 py-2 rounded-full font-semibold ${
+                activeTab === 'quiz'
+                  ? 'bg-green-500 text-white'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              Quizzes
+            </button>
+            <button
+              onClick={() => setActiveTab('labs')}
+              className={`px-6 py-2 rounded-full font-semibold ${
+                activeTab === 'labs'
+                  ? 'bg-blue-500 text-white'
+                  : 'bg-white/10 text-gray-300 hover:bg-white/20'
+              }`}
+            >
+              Labs
+            </button>
+          </div>
+        </div>
+
+        {/* Cards Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {/* Quiz Cards */}
+          {activeTab === 'quiz' &&
+            quizzes?.map((quiz) => {
               const isCompleted = user?.completedQuizzes.includes(quiz.id);
               return (
                 <div
@@ -276,13 +201,13 @@ export const Learning: React.FC = () => {
                       {quiz.difficulty}
                     </span>
                   </div>
-                  
+
                   <h3 className="text-xl font-bold text-white mb-2 group-hover:text-green-300 transition-colors">
                     {quiz.title}
                   </h3>
-                  
+
                   <p className="text-purple-300 text-sm mb-4">{quiz.category}</p>
-                  
+
                   <div className="flex items-center justify-between text-sm text-gray-400 mb-6">
                     <span>{quiz.questions.length} questions</span>
                     <div className="flex items-center space-x-1">
@@ -290,7 +215,7 @@ export const Learning: React.FC = () => {
                       <span className="text-yellow-400 font-medium">{quiz.points} pts</span>
                     </div>
                   </div>
-                  
+
                   <button
                     onClick={() => startQuiz(quiz)}
                     className={`w-full px-6 py-3 rounded-xl font-semibold transition-all duration-200 ${
@@ -304,11 +229,43 @@ export const Learning: React.FC = () => {
                 </div>
               );
             })}
-          </div>
+
+          {/* Lab Cards */}
+         {activeTab === 'labs' &&
+  labs?.map((lab) => (
+    <div
+      key={lab._id}
+      className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6 hover:bg-white/10 hover:border-white/20 transition-all duration-300"
+    >
+      {/* Optional Lab Image */}
+      {lab.image && (
+        <img
+          src={lab.image}
+          alt={lab.title}
+          className="w-full h-40 object-cover rounded-xl mb-4"
+        />
+      )}
+
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-xl font-bold text-white">{lab.title}</h3>
+        <span className="text-xs text-gray-300 bg-blue-500/20 px-3 py-1 rounded-full">{lab.track}</span>
+      </div>
+
+      <p className="text-purple-300 text-sm mb-6">{lab.description}</p>
+
+      <button
+        onClick={() => navigate(lab.route)}
+        className="w-full px-6 py-3 rounded-xl font-semibold bg-blue-600 hover:bg-blue-700 transform hover:scale-105 transition text-white"
+      >
+        Start Lab
+      </button>
+    </div>
+  ))}
         </div>
       </div>
-    );
-  }
+    </div>
+  );
+}
 
   if (quizCompleted) {
     const percentage = Math.round((score / selectedQuiz.questions.length) * 100);

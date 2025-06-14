@@ -11,7 +11,8 @@ import { Profile } from './pages/Profile';
 import { GameProvider } from './context/GameContext';
 import { StarField } from './components/StarField';
 import Register from './components/Register';
-import Login from './components/Login'
+import Login from './components/Login';
+import Pendulum from './experiments/Pendulum'
 function App() {
   return (
     <GameProvider>
@@ -30,6 +31,8 @@ function App() {
               <Route path="/learn" element={<Learning />} />
               <Route path="/news" element={<News />} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/pendulum" element={<Pendulum />} />
+
             </Routes>
           </main>
         </div>

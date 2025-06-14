@@ -21,156 +21,6 @@ interface Vehicle {
   multiplier: number;
 }
 
-const destinations: Destination[] = [
-  {
-    id: 'earth',
-    name: 'Earth',
-    type: 'planet',
-    distance: 0,
-    imageUrl: 'https://images.pexels.com/photos/87009/earth-soil-creep-moon-lunar-surface-87009.jpeg?auto=compress&cs=tinysrgb&w=800',
-    description: 'Our beautiful blue home planet',
-    funFacts: [
-      'Earth is the only known planet with life',
-      '71% of Earth\'s surface is covered by water',
-      'Earth has one natural satellite - the Moon'
-    ]
-  },
-  {
-    id: 'moon',
-    name: 'Moon',
-    type: 'moon',
-    distance: 384400,
-    imageUrl: 'https://images.pexels.com/photos/87009/earth-soil-creep-moon-lunar-surface-87009.jpeg?auto=compress&cs=tinysrgb&w=800',
-    description: 'Earth\'s only natural satellite',
-    funFacts: [
-      'The Moon is moving away from Earth at 3.8 cm per year',
-      'A day on the Moon lasts about 29.5 Earth days',
-      'The Moon has no atmosphere'
-    ]
-  },
-  {
-    id: 'mars',
-    name: 'Mars',
-    type: 'planet',
-    distance: 225000000,
-    imageUrl: 'https://images.pexels.com/photos/73873/mars-mars-rover-space-travel-robot-73873.jpeg?auto=compress&cs=tinysrgb&w=800',
-    description: 'The Red Planet, our next frontier',
-    funFacts: [
-      'Mars has the largest volcano in the solar system',
-      'A year on Mars is 687 Earth days',
-      'Mars has two small moons: Phobos and Deimos'
-    ]
-  },
-  {
-    id: 'jupiter',
-    name: 'Jupiter',
-    type: 'planet',
-    distance: 628000000,
-    imageUrl: 'https://images.pexels.com/photos/39649/jupiter-red-spot-planet-39649.jpeg?auto=compress&cs=tinysrgb&w=800',
-    description: 'The gas giant with the Great Red Spot',
-    funFacts: [
-      'Jupiter has 95 known moons',
-      'Jupiter\'s Great Red Spot is a storm larger than Earth',
-      'Jupiter acts as a cosmic vacuum cleaner, protecting inner planets'
-    ]
-  },
-  {
-    id: 'saturn',
-    name: 'Saturn',
-    type: 'planet',
-    distance: 1400000000,
-    imageUrl: 'https://images.pexels.com/photos/39649/jupiter-red-spot-planet-39649.jpeg?auto=compress&cs=tinysrgb&w=800',
-    description: 'The ringed beauty of our solar system',
-    funFacts: [
-      'Saturn has 146 known moons',
-      'Saturn is less dense than water',
-      'Saturn\'s rings are made mostly of ice particles'
-    ]
-  },
-  {
-    id: 'proxima-centauri',
-    name: 'Proxima Centauri',
-    type: 'star',
-    distance: 39900000000000,
-    imageUrl: 'https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?auto=compress&cs=tinysrgb&w=800',
-    description: 'The closest star to our solar system',
-    funFacts: [
-      'Proxima Centauri is a red dwarf star',
-      'It has at least two confirmed planets',
-      'Light from Proxima Centauri takes 4.24 years to reach Earth'
-    ]
-  },
-  {
-    id: 'andromeda',
-    name: 'Andromeda Galaxy',
-    type: 'galaxy',
-    distance: 2.4e19,
-    imageUrl: 'https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?auto=compress&cs=tinysrgb&w=800',
-    description: 'Our nearest major galactic neighbor',
-    funFacts: [
-      'Andromeda contains about 1 trillion stars',
-      'It\'s approaching the Milky Way at 250,000 mph',
-      'Andromeda and Milky Way will collide in 4.5 billion years'
-    ]
-  },
-  {
-    id: 'orion-nebula',
-    name: 'Orion Nebula',
-    type: 'nebula',
-    distance: 1.26e16,
-    imageUrl: 'https://images.pexels.com/photos/1169754/pexels-photo-1169754.jpeg?auto=compress&cs=tinysrgb&w=800',
-    description: 'A stellar nursery where new stars are born',
-    funFacts: [
-      'The Orion Nebula is 1,344 light-years away',
-      'It\'s one of the brightest nebulae visible to the naked eye',
-      'New stars are actively forming in this nebula'
-    ]
-  }
-];
-
-const vehicles: Vehicle[] = [
-  {
-    id: 'rocket',
-    name: 'Standard Rocket',
-    speed: 11,
-    description: 'Traditional chemical rocket propulsion',
-    icon: '🚀',
-    multiplier: 1
-  },
-  {
-    id: 'ion-drive',
-    name: 'Ion Drive Spacecraft',
-    speed: 50,
-    description: 'Efficient electric propulsion system',
-    icon: '⚡',
-    multiplier: 1.2
-  },
-  {
-    id: 'nuclear-pulse',
-    name: 'Nuclear Pulse Ship',
-    speed: 1000,
-    description: 'Theoretical nuclear propulsion',
-    icon: '☢️',
-    multiplier: 2
-  },
-  {
-    id: 'fusion-ramjet',
-    name: 'Fusion Ramjet',
-    speed: 30000,
-    description: 'Advanced fusion-powered spacecraft',
-    icon: '🔥',
-    multiplier: 5
-  },
-  {
-    id: 'warp-drive',
-    name: 'Warp Drive Cruiser',
-    speed: 299792458000,
-    description: 'Theoretical faster-than-light travel',
-    icon: '🌌',
-    multiplier: 10
-  }
-];
-
 export const TravelPlanner: React.FC = () => {
   const [fromDestination, setFromDestination] = useState<string>('earth');
   const [toDestination, setToDestination] = useState<string>('mars');
@@ -178,11 +28,19 @@ export const TravelPlanner: React.FC = () => {
   const [speedMultiplier, setSpeedMultiplier] = useState<number>(1);
   const [travelTime, setTravelTime] = useState<string>('');
   const [showFunFacts, setShowFunFacts] = useState<boolean>(false);
-  
-  const { addPoints } = useGame();
+  const { addPoints , fetchVehicles, fetchDestination} = useGame();
+  const [vehicles ,setVehicles] = useState <Vehicle[]| null> (null);
+  const [destinations ,setDestination] = useState <Destination[]| null> (null);
+  useEffect(()=>{
+     setVehicles(fetchVehicles)
+  },[fetchVehicles])
 
-  const getDestination = (id: string) => destinations.find(d => d.id === id);
-  const getVehicle = (id: string) => vehicles.find(v => v.id === id);
+  useEffect(()=>{
+     setDestination(fetchDestination)
+  },[fetchDestination])
+  
+  const getDestination = (id: string) => destinations?.find(d => d.id === id);
+  const getVehicle = (id: string) => vehicles?.find(v => v.id === id);
 
   const calculateTravelTime = () => {
     const from = getDestination(fromDestination);
@@ -287,7 +145,7 @@ export const TravelPlanner: React.FC = () => {
                     onChange={(e) => setFromDestination(e.target.value)}
                     className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
                   >
-                    {destinations.map((dest) => (
+                    {destinations?.map((dest) => (
                       <option key={dest.id} value={dest.id} className="bg-slate-800">
                         {getTypeIcon(dest.type)} {dest.name}
                       </option>
@@ -303,7 +161,7 @@ export const TravelPlanner: React.FC = () => {
                     onChange={(e) => setToDestination(e.target.value)}
                     className="w-full bg-white/10 border border-white/20 rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500"
                   >
-                    {destinations.map((dest) => (
+                    {destinations?.map((dest) => (
                       <option key={dest.id} value={dest.id} className="bg-slate-800">
                         {getTypeIcon(dest.type)} {dest.name}
                       </option>
@@ -366,7 +224,7 @@ export const TravelPlanner: React.FC = () => {
               </h2>
               
               <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {vehicles.map((vehicle) => (
+                {vehicles?.map((vehicle) => (
                   <button
                     key={vehicle.id}
                     onClick={() => setSelectedVehicle(vehicle.id)}
