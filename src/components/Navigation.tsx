@@ -1,13 +1,18 @@
 import React, { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation , useNavigate} from 'react-router-dom';
 import { Rocket, Globe, BookOpen, Newspaper, User, Menu, X, Award, MapPin } from 'lucide-react';
 import { useGame } from '../context/GameContext';
 
 export const Navigation: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
-  const { user } = useGame();
-
+  const { user, logout } = useGame();
+  const navigate = useNavigate();
+  const handleLogout = () => {
+      localStorage.removeItem("token")
+      logout();
+      navigate('/login'); // or navigate('/login')
+    };
   const navigation = [
     { name: 'Home', href: '/', icon: Globe },
     { name: 'Solar System', href: '/solar-system', icon: Globe },
@@ -15,6 +20,8 @@ export const Navigation: React.FC = () => {
     { name: 'Missions', href: '/missions', icon: Rocket },
     { name: 'Learn', href: '/learn', icon: BookOpen },
     { name: 'News', href: '/news', icon: Newspaper },
+
+
   ];
 
   return (
@@ -98,6 +105,16 @@ export const Navigation: React.FC = () => {
                   </Link>
                 );
               })}
+               <button
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+                className="flex items-center w-full space-x-3 px-4 py-3 text-left text-sm text-white bg-red-600 hover:bg-red-700 rounded-lg"
+              >
+                <X className="h-5 w-5" />
+                <span>Logout</span>
+              </button>
               <Link
                 to="/profile"
                 onClick={() => setIsOpen(false)}
@@ -105,7 +122,9 @@ export const Navigation: React.FC = () => {
               >
                 <User className="h-5 w-5" />
                 <span>Profile ({user?.points} pts)</span>
+                
               </Link>
+              
             </div>
           </div>
         )}

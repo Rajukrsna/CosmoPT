@@ -98,6 +98,7 @@ interface GameContextType {
   fetchVehicles : Vehicle[] |null;
   fetchDestination: Destination[]|null;
   fetchLabs: Labs[]|null;
+  logout: () => void;
 }
 
 const GameContext = createContext<GameContextType | undefined>(undefined);
@@ -241,9 +242,14 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       console.error('Error unlocking achievement:', err);
     }
   };
+  const logout = () => {
+  setUser(null); // or however you're handling user state
+  localStorage.removeItem('your_auth_token'); // clear auth if stored
+};
+
 
   return (
-    <GameContext.Provider value={{ user, addPoints, completeQuiz, visitPlanet, unlockAchievement , fetchQuiz ,fetchMission, fetchVehicles, fetchDestination, fetchLabs}}>
+    <GameContext.Provider value={{ user, addPoints, completeQuiz, visitPlanet, unlockAchievement , fetchQuiz ,fetchMission, fetchVehicles, fetchDestination, fetchLabs, logout}}>
       {children}
     </GameContext.Provider>
   );
