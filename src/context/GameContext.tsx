@@ -114,14 +114,14 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const userId = localStorage.getItem("userId"); 
   console.log(userId);
-  const API_BASE = 'http://localhost:5000/api/users';
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
 
   // Fetch user from backend
   useEffect(() => {
     const fetchUser = async () => {
        const userId = localStorage.getItem("userId"); 
       try {
-        const res = await axios.get(`${API_BASE}/${userId}`);
+        const res = await axios.get(`${API_BASE}/api/users/${userId}`);
         setUser(res.data);
       } catch (err) {
         console.error('Error fetching user:', err);
@@ -137,7 +137,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     {
       try
       {
-        const res = await axios.get(`${API_BASE}/fetch/getQuiz`)
+        const res = await axios.get(`${API_BASE}/api/fetch/getQuiz`)
         console.log("queire", res.data)
         setfetchQuiz(res.data);
       }
@@ -153,7 +153,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const fetchMission = async()=>
     {
       try{
-        const res = await axios.get(`${API_BASE}/fetch/getMission`)
+        const res = await axios.get(`${API_BASE}/api/fetch/getMission`)
         setfetchMission(res.data)
       }
       catch(err)
@@ -167,7 +167,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const fetchVehicles = async()=>
     {
       try{
-        const res = await axios.get(`${API_BASE}/fetch/getVehicles`)
+        const res = await axios.get(`${API_BASE}/api/fetch/getVehicles`)
         setfetchVehicles(res.data)
       }
       catch(err)
@@ -181,7 +181,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const fetchDestination = async()=>
     {
       try{
-        const res = await axios.get(`${API_BASE}/fetch/getDestination`)
+        const res = await axios.get(`${API_BASE}/api/fetch/getDestination`)
         setfetchDestination(res.data)
       }
       catch(err)
@@ -196,7 +196,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const fetchLabs = async()=>
     {
       try{
-        const res = await axios.get(`${API_BASE}/fetch/getLabs`)
+        const res = await axios.get(`${API_BASE}/api/fetch/getLabs`)
         setfetchLabs(res.data)
       }
       catch(err)
@@ -209,7 +209,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const addPoints = async (points: number) => {
     try {
-      const res = await axios.put(`${API_BASE}/${userId}/points`, { pointsToAdd: points });
+      const res = await axios.put(`${API_BASE}/api/users/${userId}/points`, { pointsToAdd: points });
       setUser(res.data);
     } catch (err) {
       console.error('Error adding points:', err);
@@ -218,7 +218,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const completeQuiz = async (quizId: string) => {
     try {
-      const res = await axios.put(`${API_BASE}/${userId}/quiz`, { quizId });
+      const res = await axios.put(`${API_BASE}/api/users/${userId}/quiz`, { quizId });
       setUser(res.data);
     } catch (err) {
       console.error('Error completing quiz:', err);
@@ -227,7 +227,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const visitPlanet = async (planetId: string) => {
     try {
-      const res = await axios.put(`${API_BASE}/${userId}/visit`, { planetId });
+      const res = await axios.put(`${API_BASE}/api/users/${userId}/visit`, { planetId });
       setUser(res.data);
     } catch (err) {
       console.error('Error visiting planet:', err);
@@ -236,7 +236,7 @@ export const GameProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const unlockAchievement = async (achievementId: string) => {
     try {
-      const res = await axios.put(`${API_BASE}/${userId}/unlock`, { achievementId });
+      const res = await axios.put(`${API_BASE}/api/users/${userId}/unlock`, { achievementId });
       setUser(res.data);
     } catch (err) {
       console.error('Error unlocking achievement:', err);

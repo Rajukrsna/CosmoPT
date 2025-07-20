@@ -1,7 +1,6 @@
 // context/AuthContext.tsx
 import  { createContext, useContext, useState, ReactNode } from 'react';
 import axios from 'axios';
-
 interface User {
   _id: string;
   name: string;
@@ -20,18 +19,18 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
+const API_BASE = import.meta.env.VITE_API_BASE_URL|| 'http://localhost:5000';
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
 
   const registerUser = async (name: string, password: string) => {
-    const res = await axios.post('http://localhost:5000/api/auth/register', { name , password});
+    const res = await axios.post(`${API_BASE}/api/auth/register`, { name , password});
     localStorage.setItem('userId', res.data._id);
     setUser(res.data);
   };
 
   const loginUser = async (name: string, password: string) => {
-    const res = await axios.post('http://localhost:5000/api/auth/login', { name, password});
+    const res = await axios.post(`${API_BASE}/api/auth/login`, { name, password});
     console.log("authres",res)
     localStorage.setItem('userId', res.data.user._id);
     localStorage.setItem('token', res.data.token);
